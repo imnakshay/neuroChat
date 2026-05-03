@@ -5,12 +5,13 @@ import { useEffect } from 'react';
 import { assets } from '../assets/assets';
 import Message from './Message';
 import { useRef } from 'react';
+import toast from 'react-hot-toast';
 
 const Chatbox = () => {
 
   const containerRef = useRef(null);
 
-  const { selectedChat, theme } = useAppContext();
+  const { selectedChat, theme, user, axios, token, setUser } = useAppContext();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState('');
@@ -18,7 +19,30 @@ const Chatbox = () => {
   const [isPublished, setIsPublished] = useState(false);
 
   const onSubmit = async (e) => {
-    e.preventDefaults();
+    try {
+      e.preventDefault();
+      if (!user) return toast("Login to message");
+      setLoading(true);
+      const promptCopy = prompt;
+      setPrompt('');
+      setMessages(prev => [...prev, { role: "user", content: prompt, timestamp: Date.now(), isImage: false }]);
+
+      const { data } = await axios.post(`/api/message/${mode}`, { chatId: selectedChat._id, prompt : promptCopy, isPublished }, { headers: { Authorization: token } });
+      if (data.success) {
+        setMessages(prev => [...prev, data.reply])
+        //decreaase credits
+        if (mode === 'image') setUser(prev => ({ ...prev, credits: prev.credits - 2 }));
+        else setUser(prev => ({ ...prev, credits: prev.credits - 1 }));
+      } else {
+        toast.error(data.message);
+        setPrompt(promptCopy);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setPrompt('');
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -27,19 +51,19 @@ const Chatbox = () => {
     }
   }, [selectedChat])
 
-  useEffect(()=>{
-    if(containerRef.current){
+  useEffect(() => {
+    if (containerRef.current) {
       containerRef.current.scrollTo({
-        top:containerRef.current.scrollHeight,
-        behavior:"smooth" 
+        top: containerRef.current.scrollHeight,
+        behavior: "smooth"
       })
     }
-  },[messages])
+  }, [messages])
 
   return (
     <div className='flex-1 flex flex-col justify-between m-5 md:m-10 xl:mx-30 max-md:mt-14 2xl:pr-40'>
       {/* chat messages */}
-      <div ref = {containerRef} className='flex-1 mb-5 overflow-y-scroll'>
+      <div ref={containerRef} className='flex-1 mb-5 overflow-y-scroll'>
         {messages.length === 0 && (
           <div className="h-full flex flex-col items-center justify-center gap-2 text-primary">
             <img src={theme === 'dark' ? assets.logo_full : assets.logo_full_dark} alt="" className='w-full max-w-56 sm:max-w-68' />

@@ -75,7 +75,7 @@ export const imageMessageController = async (req, res) => {
             output_format: "png"
         };
         const aiImageResponse = await axios.postForm(
-            `https://api.stability.ai/v2beta/stable-image/generate/ultra`,
+            `https://api.stability.ai/v2beta/stable-image/generate/core`,
             axios.toFormData(payload, new FormData()),
             {
                 validateStatus: undefined,
