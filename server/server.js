@@ -6,7 +6,7 @@ import userRouter from './routes/userRoutes.js';
 import chatRouter from './routes/chatRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
 import creditRouter from './routes/creditRoutes.js';
-import webhooks from 'razorpay/dist/types/webhooks.js';
+import webhooks from './routes/webhooks.js';
 
 const app = express();
 
