@@ -33,7 +33,7 @@ export const getChats = async(req,res)=>{
 //API controller for deleting a chat
 export const deleteChat = async(req,res)=>{
     try {
-        const userId = req.userId;
+        const userId = req.user._id;
         const {chatId} = req.body;
          await Chat.deleteOne({_id : chatId,userId});
          res.json({success:true,message:"Chat Deleted."});
