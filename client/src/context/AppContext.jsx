@@ -96,7 +96,7 @@ export const AppContextProvider = ({ children }) => {
         navigate, user, setUser, chats,
         setChats, selectedChat, setSelectedChat, theme,
         setTheme, createNewChat, loadingUser, fetchUsersChats,
-        token, setToken, axios
+        token, setToken, axios,fetchUser
     };
 
     return (
