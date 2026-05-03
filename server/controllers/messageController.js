@@ -39,7 +39,7 @@ export const textMessageController = async (req, res) => {
         await User.updateOne({ _id: userId }, { $inc: { credits: -1 } });
 
     } catch (error) {
-        res.json({ success: false, message: error.message });
+        res.json({ success: false, message: error.message + "api error" });
     }
 }
 
