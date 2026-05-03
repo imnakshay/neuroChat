@@ -21,7 +21,9 @@
     "imagekit": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.1",
-    "openai": "^6.35.0"
+    "openai": "^6.35.0",
+    "razorpay": "^2.9.6",
+    "svix": "^1.92.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

@@ -1,5 +1,5 @@
 import Transaction from "../models/Transaction.js";
-
+import Razorpay from 'razorpay'
 
 const plans = [
     {
@@ -28,32 +28,55 @@ const plans = [
 
 //api controller for getting all plans
 
-export const getPlans = async (req,res)=>{
+export const getPlans = async (req, res) => {
     try {
-        res.json({success:true,plans})
+        res.json({ success: true, plans })
     } catch (error) {
-        res.json({success:false,message:error.message});
+        res.json({ success: false, message: error.message });
     }
 }
 
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_API_KEY,
+    key_secret: process.env.RAZORPAY_SECRET_KEY
+})
+
 //api controller for purchasing plan
-export const purchasePlan = async (req,res)=>{
+export const purchasePlan = async (req, res) => {
     try {
-        const {planId} = req.body;
+        const { planId } = req.body;
         const userId = req.user._id;
         const plan = plans.find(plan => plan._id === planId);
-        if(!plan)return res.json({success:false,message:"Plan does not exist"});
+        if (!plan) return res.json({ success: false, message: "Plan does not exist" });
 
-        
+
         //create new transaction
-        const transaction  = await Transaction.create({
+        const transaction = await Transaction.create({
             userId,
-            planId : plan._id,
-            amount:plan.price,
-            credits:plan.credits,
-            isPaid:false
+            planId: plan._id,
+            amount: plan.price,
+            credits: plan.credits,
+            isPaid: false
         })
+
+        //create order
+        const options = {
+            amount: plan.price * 100,
+            currency: process.env.CURRENCY,
+            receipt: transaction._id.toString(),
+            notes: {
+                transactionId: transaction._id.toString()
+            }
+        }
+
+        await razorpay.orders.create(options, (error, order) => {
+            if (error) {
+                res.json({ success: false, message: error.message });
+            }
+            res.json({ success: true, order });
+        })
+
     } catch (error) {
-        
+
     }
 }

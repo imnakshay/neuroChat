@@ -4,11 +4,31 @@ import Loading from './Loading';
 
 const Credits = () => {
 
+  //razorpay pop up setup after getting the order details from the backend.
+  const initPay = async (order) => {
+    const options = {
+      key: import.meta.env.RAZORPAY_API_KEY,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Credits Payment",
+      description: "Credits Payment",
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (res) => {
+        console.log(res)
+      }
+    }
+    //window to show the options of the razorpay
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  }
+
+
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchPlans = async () => {
-    setPlans(dummyPlans); 
+    setPlans(dummyPlans);
     setLoading(false);
   }
 
@@ -29,7 +49,7 @@ const Credits = () => {
                 <span className='text-base font-normal text-gray-600 dark:text-purple-200'>{' '}/ {plan.credits} credits </span>
               </p>
               <ul className='list-disc list-inside text-sm text-gray-700  dark:text-purple-200 space-y-1'>
-                {plan.features.map((feature,index)=>(
+                {plan.features.map((feature, index) => (
                   <li key={index} >{feature}</li>
                 ))}
               </ul>
