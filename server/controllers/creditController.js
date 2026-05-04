@@ -6,22 +6,22 @@ const plans = [
         _id: "basic",
         name: "Basic",
         price: 10,
-        credits: 5,
-        features: ['100 text generations', '50 image generations', 'Standard support', 'Access to basic models']
+        credits: 4,
+        features: ['4 text generations', '2 image generations', 'Standard support', 'Access to basic models']
     },
     {
         _id: "pro",
         name: "Pro",
         price: 50,
         credits: 30,
-        features: ['500 text generations', '200 image generations', 'Priority support', 'Access to pro models', 'Faster response time']
+        features: ['30 text generations', '15 image generations', 'Priority support', 'Access to pro models', 'Faster response time']
     },
     {
         _id: "premium",
         name: "Premium",
         price: 100,
-        credits: 75,
-        features: ['1000 text generations', '500 image generations', '24/7 VIP support', 'Access to premium models', 'Dedicated account manager']
+        credits: 80,
+        features: ['80 text generations', '40 image generations', '24/7 VIP support', 'Access to premium models', 'Dedicated account manager']
     }
 ]
 
